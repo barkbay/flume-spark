@@ -6,6 +6,7 @@ scalaVersion := "2.10.3"
 
 libraryDependencies += "org.apache.spark" % "spark-streaming_2.10" % "1.4.0"
 libraryDependencies += "org.apache.spark" % "spark-streaming-kafka_2.10" % "1.4.0"
+libraryDependencies += "org.apache.spark" % "spark-streaming-flume_2.10" % "1.4.0"
 
 
 libraryDependencies += "org.apache.flume" % "flume-ng-core" % "1.6.0"
