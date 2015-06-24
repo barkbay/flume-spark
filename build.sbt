@@ -10,6 +10,7 @@ libraryDependencies += "org.apache.spark" % "spark-streaming-kafka_2.10" % "1.4.
 
 libraryDependencies += "org.apache.flume" % "flume-ng-core" % "1.6.0"
 libraryDependencies += "org.apache.flume" % "flume-ng-sdk" % "1.6.0"
+libraryDependencies += "org.apache.flume.flume-ng-channels" % "flume-kafka-channel" % "1.6.0" % "test"
 
 libraryDependencies += "org.scalatest" % "scalatest_2.10" % "2.0" % "test"
 
