@@ -6,8 +6,12 @@ import org.apache.spark.streaming.kafka._
 import org.apache.spark.SparkConf
 import org.apache.flume.source.avro.AvroFlumeEvent
 import org.apache.spark.streaming.flume.SparkFlumeEvent
+import org.apache.log4j.Logger
 
 object FlumeKafkaStreaming {
+  
+  val logger = Logger.getLogger("fr.mycorp.soc.streaming.FlumeKafkaStreaming")
+  
   def main(args: Array[String]) {
     if (args.length < 2) {
       System.err.println(s"""
@@ -22,7 +26,7 @@ object FlumeKafkaStreaming {
     val Array(brokers, topics) = args
 
     // Create context with 2 second batch interval
-    val sparkConf = new SparkConf().setMaster("local[2]").setAppName("DirectKafkaWordCount")
+    val sparkConf = new SparkConf().setMaster("local[2]").setAppName("CoutingCats")
     val ssc = new StreamingContext(sparkConf, Seconds(2))
 
     // Create direct kafka stream with brokers and topics
@@ -32,10 +36,15 @@ object FlumeKafkaStreaming {
       ssc, kafkaParams, topicsSet)
 
     // Get the lines, split them into words, count the words and print
-    val lines = messages.map(_._2).foreach(x => println(x.collect().length))
-    /*val words = lines.flatMap(_.split(" "))
-    val wordCounts = words.map(x => (x, 1L)).reduceByKey(_ + _)
-    wordCounts.print()*/
+    val lines = messages.foreachRDD( rdd => {
+      val offsetRanges:HasOffsetRanges = rdd.asInstanceOf[HasOffsetRanges]
+      offsetRanges.offsetRanges.foreach { 
+        of:OffsetRange => println(Thread.currentThread().getName + " : " + of.topic + "/" + of.partition + "/" + of.fromOffset + "=>" + of.untilOffset)
+        }
+    	println(Thread.currentThread().getName + "RECEIVED : " + rdd.collect().length)      
+    })
+      
+
 
     // Start the computation
     ssc.start()

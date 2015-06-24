@@ -36,31 +36,15 @@ class FlumeKafkaStreamingTest extends JUnit3Suite with KafkaServerTestHarness {
       override val zkConnect = TestZKUtils.zookeeperConnect
       override val numPartitions = 4
     }
-  
-  override def setUp() {
-    super.setUp()
-  }
-
-  override def tearDown() {
-    super.tearDown()
-  }
-
-
-	// Setup a Kafka server
-
-	/*val chanCtx  = new Context();
-	val channel  = new MemoryChannel();
-	channel.setName("simpleHDFSTest-mem-chan");
-	channel.configure(chanCtx);
-	channel.start();*/
 
   @Test
   def testKafkaFlume() {
+    
     println("Kafka server with broker " + brokerList)
     println("Zookeeper server is on " + zkConnect)
     
     // Create Kafka topic
-    TestUtils.createTopic(zkClient, "bloob", 1, 2, servers)
+    TestUtils.createTopic(zkClient, "bloob", 4, 2, servers)
     
     // Create Kafka Channel
     val channel:Channel = new KafkaChannel

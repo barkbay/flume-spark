@@ -15,16 +15,15 @@ import org.apache.spark.streaming.flume.SparkFlumeEvent
  */
 class AvroFlumeEventDecoder(props: VerifiableProperties = null) extends kafka.serializer.Decoder[SparkFlumeEvent] {
   
-  val log = Logger.getLogger("bla")
+  val log = Logger.getLogger(classOf[AvroFlumeEventDecoder])
   
   def fromBytes(bytes: Array[Byte]): SparkFlumeEvent = {
-    log.error("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
     val in = new ByteArrayInputStream(bytes)
     val decoder:BinaryDecoder = DecoderFactory.get.directBinaryDecoder(in, null)
     val reader = new SpecificDatumReader[AvroFlumeEvent](classOf[AvroFlumeEvent])
     val data = reader.read(null, decoder)
     log.error("HEADER=" + data.getHeaders)
-    log.error("BODY=" + data.getBody)
+    log.error("BODY=" + new String(data.getBody.array()))
     val event = new SparkFlumeEvent
     event.event = data
     event
